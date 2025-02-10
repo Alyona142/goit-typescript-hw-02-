@@ -1,6 +1,16 @@
 import styles from "./ImageCard.module.css";
 
-const ImageCard = ({ alt_description, urls, updateModalStateData }) => {
+type Props = {
+  alt_description: string;
+  urls: PhotoUrls;
+  updateModalStateData: (url: string, alt: string) => void;
+};
+
+const ImageCard: React.FC<Props> = ({
+  alt_description,
+  urls,
+  updateModalStateData,
+}) => {
   return (
     <div className={styles.cardWrapper}>
       <img

@@ -1,16 +1,22 @@
 import toast from "react-hot-toast";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FormikHelpers } from "formik";
 
 import styles from "./SearchBar.module.css";
 
-const initialValues = { query: "" };
+interface FormValues {
+  query: string;
+}
+interface Props {
+  onSubmit: (query: string) => void;
+}
+const initialValues: FormValues = { query: "" };
 
-const SearchBar = ({ onSubmit }) => {
+const SearchBar: React.FC<Props> = ({ onSubmit }) => {
   return (
     <Formik
       initialValues={initialValues}
-      onSubmit={(values, actions) => {
-        if (!values.query) {
+      onSubmit={(values: FormValues, actions: FormikHelpers<FormValues>) => {
+        if (!values.query.trim()) {
           toast.error("Please enter the value in the search field");
           return;
         }

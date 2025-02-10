@@ -11,19 +11,31 @@ import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import ImageModal from "./components/ImageModal/ImageModal";
 
+interface Photo {
+  id: string;
+  urls: { regular: string };
+  alt_description: string;
+}
+
+interface FetchGalleryPhotosResponse {
+  total: number;
+  total_pages: number;
+  results: Photo[];
+}
+
 function App() {
-  const [page, setPage] = useState(1);
-  const [queryValue, setQueryValue] = useState("");
-  const [gallery, setGallery] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState<number>(1);
+  const [queryValue, setQueryValue] = useState<string>("");
+  const [gallery, setGallery] = useState<Photo[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+  const [totalPages, setTotalPages] = useState<number>(0);
 
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const [modalImage, setModalImage] = useState("");
-  const [altDescription, setAltDescription] = useState("");
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [modalImage, setModalImage] = useState<string>("");
+  const [altDescription, setAltDescription] = useState<string>("");
 
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (queryValue === "") return;
@@ -32,7 +44,10 @@ function App() {
       try {
         setIsLoading(true);
         setIsError(false);
-        const data = await fetchGalleryPhotos(queryValue, page);
+        const data: FetchGalleryPhotosResponse = await fetchGalleryPhotos(
+          queryValue,
+          page
+        );
         if (data.total === 0) return;
         setGallery((prevGallery) => [...prevGallery, ...data.results]);
         setTotalPages(data.total_pages);
@@ -47,10 +62,10 @@ function App() {
 
   useEffect(() => {
     if (page === 1) return;
-    ref.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [page, gallery]);
 
-  const handleQuery = (newQuery) => {
+  const handleQuery = (newQuery: string) => {
     setQueryValue(newQuery);
     setGallery([]);
     setPage(1);
@@ -70,7 +85,7 @@ function App() {
     setIsOpen(false);
   };
 
-  const updateModalStateData = (src, alt) => {
+  const updateModalStateData = (src: string, alt: string) => {
     setModalImage(src);
     setAltDescription(alt);
   };
